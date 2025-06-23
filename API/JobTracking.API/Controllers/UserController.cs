@@ -1,0 +1,50 @@
+using JobTracking.Application.Contracts;
+using JobTracking.Domain.DTOs.Request.Create;
+using JobTracking.Domain.DTOs.Request.Update;
+using Microsoft.AspNetCore.Mvc;
+
+namespace JobTracking.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]/[action]")]
+public class UserController : Controller
+{
+    private readonly IUserService _userService;
+    
+    public UserController(IUserService userService)
+    {
+        _userService = userService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetById(int id)
+    {
+        return Ok(await _userService.GetUser(id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Add([FromBody] UserCreateRequestDTO dto)
+    {
+        var user = await _userService.CreateUser(dto);
+        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] UserUpdateRequestDTO dto)
+    {
+        if (id != dto.Id)
+        {
+            return BadRequest("ID mismatch.");
+        }
+
+        var success = await _userService.UpdateUser(dto);
+        return success ? NoContent() : NotFound();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var success = await _userService.DeleteUser(id);
+        return success ? NoContent() : NotFound();
+    }
+}

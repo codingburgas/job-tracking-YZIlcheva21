@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\JobTracking.DataAccess\JobTracking.DataAccess.csproj" />
+    <ProjectReference Include="..\JobTracking.Domain\JobTracking.Domain.csproj" />
   </ItemGroup>
 
 </Project>
