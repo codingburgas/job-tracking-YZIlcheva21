@@ -1,4 +1,6 @@
 ﻿using JobTracking.Application;
+using JobTracking.Application.Contracts;
+using JobTracking.Application.Implementation;
 using JobTracking.DataAccess.Data;
 
 namespace JobTracking.API
@@ -17,7 +19,8 @@ namespace JobTracking.API
         public static void AddServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<DependencyProvider>();
-            /*builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            /*
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IJobApplicationService, JobApplicationService>();*/
         }
