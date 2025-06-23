@@ -1,6 +1,7 @@
 using JobTracking.Application.Contracts;
 using JobTracking.Domain.DTOs.Request.Create;
 using JobTracking.Domain.DTOs.Request.Update;
+using JobTracking.Domain.DTOs.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobTracking.API.Controllers;
@@ -14,6 +15,23 @@ public class UserController : Controller
     public UserController(IUserService userService)
     {
         _userService = userService;
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageCount = 10)
+    {
+        var users = await _userService.GetAllUsers(page, pageCount);
+        var response = users.Select(u => new UserResponseDTO
+        {
+            Id = u.Id,
+            FirstName = u.FirstName,
+            MiddleName = u.MiddleName,
+            LastName = u.LastName,
+            Username = u.Username,
+            Role = u.Role
+        });
+
+        return Ok(response);
     }
 
     [HttpGet]

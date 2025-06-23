@@ -15,7 +15,7 @@ public class UserService : IUserService
     {
         Provider = provider;
     }
-
+    
     public async Task<List<User>> GetAllUsers(int page, int pageCount)
     {
         return await Provider.Db.Users
