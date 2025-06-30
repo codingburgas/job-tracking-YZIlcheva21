@@ -1,4 +1,6 @@
 using JobTracking.Application.Contracts;
+using JobTracking.Application.Contracts.Base;
+using JobTracking.Domain.DTOs.Request;
 using JobTracking.Domain.DTOs.Request.Create;
 using JobTracking.Domain.DTOs.Request.Update;
 using JobTracking.Domain.DTOs.Response;
@@ -11,11 +13,14 @@ namespace JobTracking.API.Controllers;
 public class UserController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IAuthService _authService;
     
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, IAuthService authService)
     {
         _userService = userService;
+        _authService = authService;
     }
+
     
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageCount = 10)
@@ -38,6 +43,18 @@ public class UserController : Controller
     public async Task<IActionResult> GetById(int id)
     {
         return Ok(await _userService.GetUser(id));
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var user = await _authService.AuthenticateAsync(request.Username, request.Password);
+        if (user is null)
+        {
+            return Unauthorized("Invalid credentials");
+        }
+
+        return Ok(user);
     }
 
     [HttpPost]
