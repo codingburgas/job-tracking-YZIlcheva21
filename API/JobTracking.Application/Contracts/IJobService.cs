@@ -7,7 +7,7 @@ using JobTracking.Domain.Filters.Base;
 
 namespace JobTracking.Application.Contracts.Base;
 
-public interface IJobAdService
+public interface IJobService
 {
     public Task<List<Job>> GetAllJobAds(int page, int pageCount);
     public Task<JobResponseDTO?> GetJobAd(int userId);

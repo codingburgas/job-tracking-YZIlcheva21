@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JobTracking.Application.Implementation;
 
-public class JobAdService : IJobAdService
+public class JobService : IJobService
 {
     protected DependencyProvider Provider { get; set; }
     
-    public JobAdService(DependencyProvider provider)
+    public JobService(DependencyProvider provider)
     {
         Provider = provider;
     }
