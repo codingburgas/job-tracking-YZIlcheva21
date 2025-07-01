@@ -1,0 +1,40 @@
+<div class="container py-5 profile-page">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card border-1 rounded-0">
+        <div class="card-body bg-light p-5">
+          
+          <h3 class="mb-4 text-center text-primary fw-bold">
+            Потребителски Акаунт
+          </h3>
+          <div>
+            <div class="mb-4">
+              <label class="form-label text-muted fw-semibold">Собствено име</label>
+              <div class="form-control-plaintext fs-5">{{ user.firstName }}</div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label text-muted fw-semibold">Презиме</label>
+              <div class="form-control-plaintext fs-5">{{ user.middleName }}</div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label text-muted fw-semibold">Фамилия</label>
+              <div class="form-control-plaintext fs-5">{{ user.lastName }}</div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label text-muted fw-semibold">Потребителско име</label>
+              <div class="form-control-plaintext fs-5">{{ user.username }}</div>
+            </div>
+            <div class="mb-2">
+              <label class="form-label text-muted fw-semibold">Роля:</label>
+              <span>
+                <span class="badge px-3 py-2 fs-6 text-muted">
+                  {{ user.role === "admin" ? 'Администратор' : 'Потребител' }}
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

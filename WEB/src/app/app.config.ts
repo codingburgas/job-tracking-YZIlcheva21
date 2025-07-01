@@ -1,4 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';

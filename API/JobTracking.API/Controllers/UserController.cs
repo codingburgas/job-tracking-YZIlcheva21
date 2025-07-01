@@ -12,8 +12,8 @@ namespace JobTracking.API.Controllers;
 [Route("api/[controller]/[action]")]
 public class UserController : Controller
 {
-    private readonly IUserService _userService;
     private readonly IAuthService _authService;
+    private readonly IUserService _userService;
     
     public UserController(IUserService userService, IAuthService authService)
     {
@@ -21,6 +21,14 @@ public class UserController : Controller
         _authService = authService;
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var user = await _authService.AuthenticateAsync(request.Username, request.Password);
+        if (user is null) return Unauthorized("Invalid credentials");
+        
+        return Ok(user);
+    }
     
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageCount = 10)
@@ -44,18 +52,6 @@ public class UserController : Controller
     {
         return Ok(await _userService.GetUser(id));
     }
-    
-    [HttpPost]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
-    {
-        var user = await _authService.AuthenticateAsync(request.Username, request.Password);
-        if (user is null)
-        {
-            return Unauthorized("Invalid credentials");
-        }
-
-        return Ok(user);
-    }
 
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] UserCreateRequestDTO dto)
@@ -69,7 +65,7 @@ public class UserController : Controller
     {
         if (id != dto.Id)
         {
-            return BadRequest("ID mismatch.");
+            return BadRequest("Id not found");
         }
 
         var success = await _userService.UpdateUser(dto);

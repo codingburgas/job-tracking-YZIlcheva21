@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
+using System.Text;
 using JobTracking.Application.Contracts.Base;
-using JobTracking.DataAccess.Data.Models;
-using JobTracking.DataAccess;
 using JobTracking.DataAccess.Data;
 using JobTracking.Domain.DTOs.Response;
 using Microsoft.EntityFrameworkCore;
@@ -16,20 +15,31 @@ public class AuthService : IAuthService
     {
         _context = context;
     }
+    
+    public static string HashPassword(string password)
+    {
+        using SHA256 sha256 = SHA256.Create();
+        byte[] bytes = Encoding.UTF8.GetBytes(password);
+        byte[] hashBytes = sha256.ComputeHash(bytes);
+            
+        StringBuilder builder = new StringBuilder();
+        foreach (var b in hashBytes)
+        {
+            builder.Append(b.ToString("x2"));
+        }
+
+        return builder.ToString();
+    }
 
     public async Task<UserResponseDTO?> AuthenticateAsync(string username, string password)
     {
-        var hashedPassword = PasswordHasher.HashPassword(password);
-
+        var hashedPassword = HashPassword(password);
         var userEntity = await _context.Users
             .Where(u => u.Username == username && u.Password == hashedPassword)
             .FirstOrDefaultAsync();
 
-        if (userEntity is null)
-        {
-            return null;
-        }
-
+        if (userEntity is null) return null;
+        
         return new UserResponseDTO
         {
             Id = userEntity.Id,

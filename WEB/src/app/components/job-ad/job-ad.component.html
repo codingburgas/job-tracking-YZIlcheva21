@@ -1,0 +1,111 @@
+<div class="container py-4">
+
+  <h4 class="text-center text-muted fw-normal fs-5 mb-4">Открийте всички налични обяви или търсете по филтри!</h4>
+
+  <div *ngIf="alertMessage" class="alert alert-dismissible fade show mt-2"
+       [ngClass]="{
+          'alert-success': alertType === 'success',
+          'alert-danger': alertType === 'danger',
+          'alert-warning': alertType === 'warning'
+       }"
+       role="alert">
+    <i class="bi bi-info-circle me-1"></i> {{ alertMessage }}
+    <button type="button" class="btn-close" (click)="alertMessage = null"></button>
+  </div>
+
+  <!-- visible only to admin -->
+  <div *ngIf="userRole === 'admin'" class="mb-4">
+    <button class="btn btn-primary" (click)="onAddJobAd()">
+      + Добави обява
+    </button>
+  </div>
+
+  <div class="border bg-light card mb-4 rounded-0">
+    <div class="card-header bg-white border-bottom-0 rounded-top-0">
+      <h5 class="mb-0 text-secondary fw-semibold fs-5">Филтри:</h5>
+    </div>
+    <div class="card-body small">
+      <form class="row gy-2 gx-5 align-items-center justify-content-center">
+        <div class="col-md-4">
+          <label class="form-label">Заглавие</label>
+          <input type="text" class="form-control form-control-sm" placeholder="Заглавие на обявата" [(ngModel)]="filters.title" name="title" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Компания</label>
+          <input type="text" class="form-control form-control-sm" placeholder="Име на компанията" [(ngModel)]="filters.companyName" name="companyName" />
+        </div>
+        <span></span>
+
+        <div class="col-md-4">
+          <label class="form-label">Статус</label>
+          <select class="form-select form-select-sm" [(ngModel)]="filters.isOpen" name="isOpen">
+            <option [ngValue]="null">всички</option>
+            <option [ngValue]="true">отворени</option>
+            <option [ngValue]="false">затворени</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Дата на публикуване</label>
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="filters.publishedOn" name="publishedOn" />
+        </div>
+
+        <span></span>
+
+        <div class="text-center mt-4">
+          <button type="button" class="btn btn-sm btn-primary px-3 rounded-pill" (click)="applyFilters()">
+            <i class="bi bi-search me-1"></i> Потърси обява
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <h2 class="text-center text-primary fw-semibold fs-3 mt-3 mb-3">Обяви за работа</h2>
+
+  <div *ngIf="jobAds.length === 0" class="alert alert-danger text-center small rounded-0 d-flex justify-content-center align-items-center">
+  <i class="bi bi-x-circle me-1"></i> Няма налични обяви
+</div>
+
+  <div class="row g-4" *ngIf="jobAds.length > 0">
+    <div class="col-md-6" *ngFor="let ad of jobAds">
+      <div class="card border-1 bg-light h-100 rounded-4">
+        <div class="card-body small">
+
+          <h6 class="card-title fw-bold text-dark mb-1">{{ ad.title }}</h6>
+          <p class="mb-1 text-muted">{{ ad.companyName }}</p>
+          <p class="mb-2">{{ ad.description }}</p>
+          <p class="mb-1 text-secondary">
+            <strong>Публикувана на:</strong> {{ ad.publishedOn | date:'dd.MM.yyyy' }}
+          </p>
+
+          <span class="badge rounded-pill px-2 py-1"
+            [ngClass]="ad.isOpen ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+            {{ ad.isOpen ? 'активна' : 'неактивна' }}
+          </span>
+
+          <div *ngIf="userRole === 'admin'" class="mt-3 d-flex gap-2">
+            <button
+              class="btn btn-sm btn-outline-danger rounded-pill px-3"
+              (click)="delete(ad.id)"
+              [disabled]="isDeleting && deletingJobAdId === ad.id"
+            >
+              <i class="bi bi-trash me-1"></i>
+              <span *ngIf="isDeleting && deletingJobAdId === ad.id" class="spinner-border spinner-border-sm"></span>
+              <span *ngIf="!(isDeleting && deletingJobAdId === ad.id)">Изтрий</span>
+            </button>
+          </div>
+
+          <div *ngIf="userRole === 'user' && ad.isOpen" class="mt-3">
+            <button class="btn btn-sm btn-primary rounded-pill px-3"
+                    (click)="onApply(ad)"
+                    [disabled]="isApplied(ad.id) || applyingJobId === ad.id">
+              <span *ngIf="applyingJobId === ad.id" class="spinner-border spinner-border-sm me-1"></span>
+              Кандидатствай сега
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

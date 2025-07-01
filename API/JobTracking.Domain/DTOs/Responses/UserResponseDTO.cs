@@ -7,5 +7,5 @@ public class UserResponseDTO
     public string MiddleName { get; set; }
     public string LastName { get; set; }
     public string Username { get; set; }
-    public String Role { get; set; }
+    public string Role { get; set; }
 }

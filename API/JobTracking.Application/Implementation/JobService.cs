@@ -11,7 +11,7 @@ namespace JobTracking.Application.Implementation;
 
 public class JobService : IJobService
 {
-    protected DependencyProvider Provider { get; set; }
+    private DependencyProvider Provider { get; set; }
     
     public JobService(DependencyProvider provider)
     {
@@ -40,6 +40,41 @@ public class JobService : IJobService
                 IsOpen = j.IsOpen
             })
             .FirstOrDefaultAsync();
+    }
+    
+    public Task<IQueryable<JobResponseDTO>> GetFilteredJobAds(BaseFilter<JobFilter> filter)
+    {
+        IQueryable<Job> query = Provider.Db.JobAds;
+
+        var jobFilter = filter.Filters;
+
+        if (jobFilter is not null)
+        {
+            var hasTitle = !string.IsNullOrWhiteSpace(jobFilter.Title);
+            var hasCompany = !string.IsNullOrWhiteSpace(jobFilter.CompanyName);
+            var hasPublishedOn = jobFilter.PublishedOn.HasValue;
+            var hasIsOpen = jobFilter.IsOpen.HasValue;
+
+            if (hasTitle || hasCompany || hasPublishedOn || hasIsOpen)
+            {
+                query = query.Where(j =>
+                    (hasTitle && j.Title.Contains(jobFilter.Title)) ||
+                    (hasCompany && j.CompanyName.Contains(jobFilter.CompanyName)) ||
+                    (hasPublishedOn && j.PublishedOn.Date == jobFilter.PublishedOn.Value.Date) ||
+                    (hasIsOpen && j.IsOpen == jobFilter.IsOpen)
+                );
+            }
+        }
+        
+        return Task.FromResult(query.Select(x => new JobResponseDTO
+        {
+            Id = x.Id,
+            Title = x.Title,
+            CompanyName = x.CompanyName,
+            Description = x.Description,
+            PublishedOn = x.PublishedOn,
+            IsOpen = x.IsOpen
+        }));
     }
     
     public async Task<JobResponseDTO> CreateJobAd(JobCreateRequestDTO dto)
@@ -128,40 +163,5 @@ public class JobService : IJobService
         Provider.Db.JobAds.Remove(entity);
         await Provider.Db.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<IQueryable<JobResponseDTO>> GetFilteredJobAds(BaseFilter<JobFilter> filter)
-    {
-        IQueryable<Job> query = Provider.Db.JobAds;
-
-        var jobAdFilter = filter.Filters;
-
-        if (jobAdFilter is not null)
-        {
-            var hasTitle = !string.IsNullOrWhiteSpace(jobAdFilter.Title);
-            var hasCompany = !string.IsNullOrWhiteSpace(jobAdFilter.CompanyName);
-            var hasPublishedOn = jobAdFilter.PublishedOn.HasValue;
-            var hasIsOpen = jobAdFilter.IsOpen.HasValue;
-
-            if (hasTitle || hasCompany || hasPublishedOn || hasIsOpen)
-            {
-                query = query.Where(j =>
-                    (hasTitle && j.Title.Contains(jobAdFilter.Title)) ||
-                    (hasCompany && j.CompanyName.Contains(jobAdFilter.CompanyName)) ||
-                    (hasPublishedOn && j.PublishedOn.Date == jobAdFilter.PublishedOn.Value.Date) ||
-                    (hasIsOpen && j.IsOpen == jobAdFilter.IsOpen)
-                );
-            }
-        }
-        
-        return query.Select(x => new JobResponseDTO
-        {
-            Id = x.Id,
-            Title = x.Title,
-            CompanyName = x.CompanyName,
-            Description = x.Description,
-            PublishedOn = x.PublishedOn,
-            IsOpen = x.IsOpen
-        });
     }
 }

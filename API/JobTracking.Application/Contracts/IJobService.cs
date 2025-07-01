@@ -11,8 +11,8 @@ public interface IJobService
 {
     public Task<List<Job>> GetAllJobAds(int page, int pageCount);
     public Task<JobResponseDTO?> GetJobAd(int userId);
+    public Task<IQueryable<JobResponseDTO>> GetFilteredJobAds(BaseFilter<JobFilter> filter);
     public Task<JobResponseDTO> CreateJobAd(JobCreateRequestDTO dto);
     public Task<bool> UpdateJobAd(JobUpdateRequestDTO dto);
     public Task<bool> DeleteJobAd(int id);
-    public Task<IQueryable<JobResponseDTO>> GetFilteredJobAds(BaseFilter<JobFilter> filter);
 }

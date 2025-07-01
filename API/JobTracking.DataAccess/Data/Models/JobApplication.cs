@@ -15,7 +15,7 @@ public class JobApplication : IEntity
     public int JobAdId { get; set; }
 
     [Required]
-    public String Status { get; set; }
+    public string Status { get; set; }
 
     public bool IsActive { get; set; }
     public DateTime CreatedOn { get; set; }

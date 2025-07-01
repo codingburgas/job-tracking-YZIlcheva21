@@ -1,0 +1,69 @@
+<div class="container py-4">
+  <h2 class="text-center text-primary fw-semibold fs-4 mb-4">Добавяне на нова обява</h2>
+
+  <div *ngIf="alertMessage" class="alert alert-dismissible fade show"
+       [ngClass]="{
+         'alert-success': alertType === 'success',
+         'alert-danger': alertType === 'danger'
+       }" role="alert">
+    {{ alertMessage }}
+    <button type="button" class="btn-close" aria-label="Close" (click)="alertMessage = null"></button>
+  </div>
+
+  <!-- Job ad form -->
+  <form (ngSubmit)="onSubmit()" #jobForm="ngForm" class="row g-3" [class.disabled]="isSubmitting" [attr.aria-busy]="isSubmitting">
+
+    <!-- Title input -->
+    <div class="col-md-6">
+      <label class="form-label">Заглавие</label>
+      <input type="text" class="form-control" [(ngModel)]="jobAd.title" name="title" #titleModel="ngModel" required [disabled]="isSubmitting" maxlength="128" />
+      <div *ngIf="titleModel.invalid && titleModel.touched" class="text-danger small">
+        <span *ngIf="titleModel.errors?.['required']">Заглавието е задължително.</span>
+        <span *ngIf="titleModel.errors?.['maxlength']">Максимум 128 символа.</span>
+      </div>
+    </div>
+
+    <!-- Company input -->
+    <div class="col-md-6">
+      <label class="form-label">Фирма</label>
+      <input type="text" class="form-control" [(ngModel)]="jobAd.companyName" name="companyName" #companyModel="ngModel" required [disabled]="isSubmitting" maxlength="128" />
+      <div *ngIf="companyModel.invalid && companyModel.touched" class="text-danger small">
+        <span *ngIf="companyModel.errors?.['required']">Името на фирмата е задължително.</span>
+        <span *ngIf="companyModel.errors?.['maxlength']">Максимум 128 символа.</span>
+      </div>
+    </div>
+
+    <!-- Description textarea -->
+    <div class="col-12">
+      <label class="form-label">Описание</label>
+      <textarea class="form-control" rows="5" [(ngModel)]="jobAd.description" name="description" #descriptionModel="ngModel" required [disabled]="isSubmitting" maxlength="1024"></textarea>
+      <div *ngIf="descriptionModel.invalid && descriptionModel.touched" class="text-danger small">
+        <span *ngIf="descriptionModel.errors?.['required']">Описанието е задължително.</span>
+        <span *ngIf="descriptionModel.errors?.['maxlength']">Максимум 1024 символа.</span>
+      </div>
+    </div>
+
+    <!-- Published on date input -->
+    <div class="col-md-4">
+      <label class="form-label">Дата на публикуване</label>
+      <input type="date" class="form-control" [(ngModel)]="jobAd.publishedOn" name="publishedOn" required [disabled]="isSubmitting" />
+    </div>
+
+    <!-- Is open checkbox -->
+    <div class="col-md-4 d-flex align-items-end">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="jobAd.isOpen" name="isOpen" [disabled]="isSubmitting" />
+        <label class="form-check-label">Обявата е отворена</label>
+      </div>
+    </div>
+
+    <!-- Submit button -->
+    <div class="col-12 text-end mt-3">
+      <button type="submit" class="btn btn-primary px-4 rounded-pill" [disabled]="jobForm.invalid || isSubmitting">
+        <i *ngIf="!isSubmitting" class="bi bi-plus-circle me-1"></i>
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+        Създай обява
+      </button>
+    </div>
+  </form>
+</div>

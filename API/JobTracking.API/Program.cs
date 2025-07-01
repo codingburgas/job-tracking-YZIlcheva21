@@ -5,6 +5,9 @@ namespace JobTracking.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
+            // Add CORS policy
+            builder.AddCors();
 
             // Add services to the container.
             builder.AddContext();
@@ -25,8 +28,10 @@ namespace JobTracking.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            
+            app.UseCors("AllowAngularClient");
 
-            app.UseHttpsRedirection();
+            /*app.UseHttpsRedirection();*/
 
             app.UseAuthorization();
 

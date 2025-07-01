@@ -23,7 +23,7 @@ public class UserUpdateRequestDTO
     public string? Password { get; set; }
 
     [Required]
-    public String Role { get; set; }
+    public string Role { get; set; }
 
     public bool IsActive { get; set; }
 }

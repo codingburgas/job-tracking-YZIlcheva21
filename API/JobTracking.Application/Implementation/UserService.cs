@@ -53,7 +53,7 @@ public class UserService : IUserService
             MiddleName = dto.MiddleName,
             LastName = dto.LastName,
             Username = dto.Username,
-            Password = dto.Password,
+            Password = AuthService.HashPassword(dto.Password),
             Role = dto.Role,
             CreatedOn = DateTime.UtcNow,
             CreatedBy = "system",

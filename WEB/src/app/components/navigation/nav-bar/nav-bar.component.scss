@@ -1,0 +1,17 @@
+.nav-link {
+  color: #333;
+  transition: color 0.2s ease-in-out;
+
+  &.active,
+  &:hover {
+    color: #ef7247;
+  }
+}
+
+.rounded-pill {
+  border: none;
+  transition: 0.3s ease;
+  &:hover {
+    color: #dc3545;
+  }
+}

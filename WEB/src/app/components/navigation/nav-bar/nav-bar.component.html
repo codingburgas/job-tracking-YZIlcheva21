@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-2 sticky-top animate-navbar">
+  <div class="container-fluid px-4">
+
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center fw-medium small">
+        <li class="nav-item">
+          <a class="nav-link px-3" routerLink="/job-ads" routerLinkActive="active">Обяви за работа</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link px-3" routerLink="/job-applications" routerLinkActive="active">
+            {{ userRole === 'admin' ? 'Кандидатури' : 'Моите кандидатури' }}
+          </a>
+        </li>
+
+        <li class="nav-item" *ngIf="authService.isAuthenticated()">
+          <a class="nav-link px-3" routerLink="/profile" routerLinkActive="active">Акаунт</a>
+        </li>
+      </ul>
+
+      <a class="navbar-brand d-flex align-items-center fw-bold fs-5 text-dark mx-auto" routerLink="/job-ads" style="position: absolute; left: 50%; transform: translateX(-50%);">
+      <img src="assets/vibe-jobs.png" alt="VibeJobs' Logo" height="52" class="me-2" />
+      </a>
+
+      <div class="d-flex align-items-center">
+        <button class="btn btn-sm rounded-pill px-4" (click)="onLogout()">
+          <i class="bi bi-door-open me-1"></i>Изход
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

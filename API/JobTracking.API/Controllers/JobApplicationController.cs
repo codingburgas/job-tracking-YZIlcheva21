@@ -57,7 +57,7 @@ public class JobApplicationController : Controller
     {
         if (id != dto.Id)
         {
-            return BadRequest("ID mismatch.");
+            return BadRequest("Id not found");
         }
 
         var success = await _jobApplicationService.UpdateJobApplication(dto);

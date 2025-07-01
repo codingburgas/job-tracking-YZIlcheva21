@@ -24,7 +24,7 @@ public class User : IEntity
     public string Password { get; set; }
 
     [Required]
-    public String Role { get; set; }
+    public string Role { get; set; }
 
     public bool IsActive { get; set; }
     public DateTime CreatedOn { get; set; }

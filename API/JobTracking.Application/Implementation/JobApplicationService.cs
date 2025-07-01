@@ -13,7 +13,7 @@ namespace JobTracking.Application.Implementation;
 
 public class JobApplicationService : IJobApplicationService
 {
-    protected DependencyProvider Provider { get; set; }
+    private DependencyProvider Provider { get; set; }
     
     public JobApplicationService(DependencyProvider provider)
     {
